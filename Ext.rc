@@ -1,0 +1,247 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "ccx.h"
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+1 VERSIONINFO
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
+ FILEFLAGSMASK 0x0L
+#ifdef _DEBUG
+ FILEFLAGS 0x21L
+#else
+ FILEFLAGS 0x20L
+#endif
+ FILEOS 0x10001L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "FileDescription", "OpenGL Surface object"
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "InternalName", "OpenGL-Surface"
+            VALUE "LegalCopyright", "Copyright © 2026 Nasir ""Nassic"" W."
+            VALUE "OriginalFilename", "OpenGL-Surface.mfx"
+            VALUE "ProductVersion", "1, 0, 0, 0"
+            VALUE "SpecialBuild", "00000001"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RCDATA
+//
+
+KPX_MAGICNUMBER RCDATA 
+BEGIN
+    0x2516, 0x5908
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+#if defined(APSTUDIO_INVOKED) || defined(EDITOR)
+#if defined(APSTUDIO_INVOKED)
+EXO_ICON$(EDITOR)       BITMAP                  "RES\\EXTICON.BMP"
+
+#else
+EXO_ICON                BITMAP                  "RES\\EXTICON.BMP"
+
+#endif
+#endif
+#if defined(APSTUDIO_INVOKED) || defined(EDITOR)
+#if defined(APSTUDIO_INVOKED)
+EXO_IMAGE$(EDITOR)      BITMAP                  "RES\\EXTIMG.BMP"
+
+#else
+EXO_IMAGE               BITMAP                  "RES\\EXTIMG.BMP"
+
+#endif
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+#if defined(APSTUDIO_INVOKED) || defined(EDITOR)
+#if defined(APSTUDIO_INVOKED)
+MN_CONDITIONS$(EDITOR) MENU
+#else
+MN_CONDITIONS MENU
+#endif
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "On create window success",    IDMN_ONCREATES
+        MENUITEM "On create window failure",    IDMN_ONCREATEF
+        MENUITEM SEPARATOR
+        MENUITEM "On redraw",                   IDMN_ONREDRAW
+    END
+END
+#endif
+
+#if defined(APSTUDIO_INVOKED) || defined(EDITOR)
+#if defined(APSTUDIO_INVOKED)
+MN_ACTIONS$(EDITOR) MENU
+#else
+MN_ACTIONS MENU
+#endif
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "Set object size",             IDMN_SETSIZE
+        MENUITEM SEPARATOR
+        MENUITEM "Create surface",              IDMN_CREATESURF
+        MENUITEM "Make current",                IDMN_MAKECUR
+        MENUITEM SEPARATOR
+        POPUP "Auto redraw"
+        BEGIN
+            MENUITEM "Enable",                      IDMN_AUTOREDRAWE
+            MENUITEM "Disable",                     IDMN_AUTOREDRAWD
+        END
+        MENUITEM "Redraw surface",              IDMN_REDRAW
+        MENUITEM SEPARATOR
+        MENUITEM "Set transparent color",       IDMN_SETTRANSP
+    END
+END
+#endif
+
+#if defined(APSTUDIO_INVOKED) || defined(EDITOR)
+#if defined(APSTUDIO_INVOKED)
+MN_EXPRESSIONS$(EDITOR) MENU
+#else
+MN_EXPRESSIONS MENU
+#endif
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "Get object width",            IDMN_WIDTH
+        MENUITEM "Get object height",           IDMN_HEIGHT
+        MENUITEM SEPARATOR
+        MENUITEM "Get transparent color",       IDMN_TRANSPCOLOR
+    END
+END
+#endif
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""ccx.h""\r\n"
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    KPX_MARK                "MF2"
+    KPX_NAME                "OpenGL Surface"
+    IDSA_SETSIZE            "Set object size to (%0 x %1)"
+    IDSA_SETSIZE1           "Width (0 to ignore)"
+    IDSA_CREATESURF         "Create surface"
+    IDSA_MAKECUR            "Make current"
+    IDSA_SETSIZE2           "Height (0 to ignore)"
+    IDSA_AUTOREDRAWE        "Enable auto redraw"
+    IDSC_ONCREATES          "%o: On create window success"
+    IDSC_ONCREATEF          "%o: On create window failure"
+    IDSC_ONREDRAW           "%o: On redraw"
+    IDSA_AUTOREDRAWD        "Disable auto redraw"
+    IDSA_REDRAW             "Redraw surface"
+    IDSE_WIDTH              "Width("
+    IDSE_HEIGHT             "Height("
+END
+
+STRINGTABLE
+BEGIN
+    IDST_OBJNAME            "OpenGL Surface"
+    IDST_AUTHOR             "Nassic :)"
+    IDST_COPYRIGHT          "Copyright © 2026 Nasir ""Nassic"" W."
+    IDST_COMMENT            "Replacement for OpenGL Base (© Min) that renders directly to Fusion's surface."
+    IDST_HTTP               "https://community.clickteam.com/user/36199-nasirfoxx/"
+END
+
+STRINGTABLE
+BEGIN
+    IDSE_TRANSPCOLOR        "TransparentColor("
+    IDSA_SETTRANSP          "Set transparent color to %0"
+    IDSA_SETTRANSP1         "Transparent color"
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
