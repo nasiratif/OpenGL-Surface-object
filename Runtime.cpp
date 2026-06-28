@@ -336,7 +336,7 @@ cSurface* WINAPI DLLExport GetRunObjectSurface(LPRDATA rdPtr)
 
 LPSMASK WINAPI DLLExport GetRunObjectCollisionMask(LPRDATA rdPtr, LPARAM lParam)
 {
-	if ((rdPtr->rs.rsEffect & EFFECTFLAG_TRANSPARENT) == 0)
+	if (!(rdPtr->rs.rsEffect & EFFECTFLAG_TRANSPARENT))
 		return NULL;
 
 	// Transparent? Create mask
@@ -344,7 +344,7 @@ LPSMASK WINAPI DLLExport GetRunObjectCollisionMask(LPRDATA rdPtr, LPARAM lParam)
 	if (rdPtr->surf)
 	{
 		auto dwMaskSize = rdPtr->surf->CreateMask(NULL, lParam);
-		if (dwMaskSize != 0)
+		if (dwMaskSize)
 		{
 			if (pMask)
 				free(pMask);

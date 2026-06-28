@@ -26,7 +26,11 @@
 
 #define	CND_ONREDRAW 2
 
-#define	CND_LAST 3
+#define	CND_ISAUTOREDRAW 3
+
+#define	CND_ISTRANSP 4
+
+#define	CND_LAST 5
 
 // ---------------------------
 // DEFINITION OF ACTIONS CODES
@@ -40,9 +44,11 @@
 #define	ACT_AUTOREDRAWD 4
 #define	ACT_REDRAW 5
 
-#define	ACT_SETTRANSP 6
+#define	ACT_TRANSPE 6
+#define	ACT_TRANSPD 7
+#define	ACT_SETTRANSP 8
 
-#define	ACT_LAST 7
+#define	ACT_LAST 9
 
 // -------------------------------
 // DEFINITION OF EXPRESSIONS CODES

@@ -24,6 +24,10 @@
 #define IDSE_TRANSPCOLOR                16
 #define IDSA_SETTRANSP                  17
 #define IDSA_SETTRANSP1                 18
+#define IDSC_ISAUTOREDRAW               19
+#define IDSA_TRANSPE                    20
+#define IDSA_TRANSPD                    21
+#define IDSC_ISTRANSP                   22
 #define IDST_OBJNAME                    128
 #define IDST_AUTHOR                     129
 #define IDST_COPYRIGHT                  130
@@ -50,11 +54,14 @@
 #define IDMN_AUTOREDRAWE                25003
 #define IDMN_AUTOREDRAWD                25004
 #define IDMN_REDRAW                     25005
-#define IDMN_SETTRANSP                  25006
+#define IDMN_TRANSPE                    25006
+#define IDMN_TRANSPD                    25007
+#define IDMN_SETTRANSP                  25008
 #define IDMN_CONDITION                  26000
 #define IDMN_ONCREATES                  26000
 #define IDMN_ONCREATEF                  26001
 #define IDMN_ONREDRAW                   26002
+#define IDMN_ISAUTOREDRAW               26003
 #define IDMN_EXPRESSION                 27000
 #define IDMN_WIDTH                      27000
 #define IDMN_EXPRESSION2                27001
@@ -66,6 +73,13 @@
 #define ID_AUTOREDRAW_ENABLE            40024
 #define ID_AUTOREDRAW_DISABLE           40025
 #define ID__SETTRANSPARENTCOLOR         40033
+#define ID__AUTOREDRAW40035             40035
+#define ID_AUTOREDRAW_IENABLED          40036
+#define ID__TRANSPARENCY                40038
+#define ID_TRANSPARENCY_ENABLE          40039
+#define ID_TRANSPARENCY_DISABLE         40040
+#define ID__ISTRANSPARENCYENABLED       40043
+#define IDMN_ISTRANSP                   26004
 
 // Next default values for new objects
 // 
@@ -73,7 +87,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        101
-#define _APS_NEXT_COMMAND_VALUE         40035
+#define _APS_NEXT_COMMAND_VALUE         40045
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

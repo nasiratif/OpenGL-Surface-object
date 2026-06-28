@@ -550,7 +550,6 @@ BOOL WINAPI DLLExport GetPropCheck(LPMV mV, LPEDATA edPtr, UINT nPropID)
 	case PROPID_AUTOREDRAW:
 		return edPtr->autoRedraw;
 	}
-
 #endif // !defined(RUN_ONLY)
 	return 0;		// Unchecked
 }
@@ -572,7 +571,6 @@ void WINAPI DLLExport SetPropValue(LPMV mV, LPEDATA edPtr, UINT nPropID, LPVOID 
 		edPtr->transpColor = ((CPropDWordValue*)pValue)->m_dwValue;
 		break;
 	}
-
 #endif // !defined(RUN_ONLY)
 }
 
@@ -1003,6 +1001,7 @@ LPINFOEVENTSV2 WINAPI DLLExport GetConditionInfos(mv _far *mV, short code)
 LPINFOEVENTSV2 WINAPI DLLExport GetActionInfos(mv _far *mV, short code)
 {
 #ifndef RUN_ONLY
+	OutputDebugString(_T("ActionInfos\n"));
 	return &GetEventInformations((LPEVENTINFOS2)actionsInfos, code)->infos;
 #else
 	return NULL;

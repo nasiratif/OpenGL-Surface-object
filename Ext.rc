@@ -109,10 +109,14 @@ MN_CONDITIONS MENU
 BEGIN
     POPUP ""
     BEGIN
-        MENUITEM "On create window success",    IDMN_ONCREATES
-        MENUITEM "On create window failure",    IDMN_ONCREATEF
+        MENUITEM "On create surface success",   IDMN_ONCREATES
+        MENUITEM "On create surface failure",   IDMN_ONCREATEF
         MENUITEM SEPARATOR
         MENUITEM "On redraw",                   IDMN_ONREDRAW
+        MENUITEM SEPARATOR
+        MENUITEM "Is auto redraw enabled?",     IDMN_ISAUTOREDRAW
+        MENUITEM SEPARATOR
+        MENUITEM "Is transparency enabled?",    IDMN_ISTRANSP
     END
 END
 #endif
@@ -138,6 +142,11 @@ BEGIN
         END
         MENUITEM "Redraw surface",              IDMN_REDRAW
         MENUITEM SEPARATOR
+        POPUP "Transparency"
+        BEGIN
+            MENUITEM "Enable",                      IDMN_TRANSPE
+            MENUITEM "Disable",                     IDMN_TRANSPD
+        END
         MENUITEM "Set transparent color",       IDMN_SETTRANSP
     END
 END
@@ -205,8 +214,8 @@ BEGIN
     IDSA_MAKECUR            "Make current"
     IDSA_SETSIZE2           "Height (0 to ignore)"
     IDSA_AUTOREDRAWE        "Enable auto redraw"
-    IDSC_ONCREATES          "%o: On create window success"
-    IDSC_ONCREATEF          "%o: On create window failure"
+    IDSC_ONCREATES          "%o: On create surface success"
+    IDSC_ONCREATEF          "%o: On create surface failure"
     IDSC_ONREDRAW           "%o: On redraw"
     IDSA_AUTOREDRAWD        "Disable auto redraw"
     IDSA_REDRAW             "Redraw surface"
@@ -219,7 +228,7 @@ BEGIN
     IDST_OBJNAME            "OpenGL Surface"
     IDST_AUTHOR             "Nassic :)"
     IDST_COPYRIGHT          "Copyright © 2026 Nasir ""Nassic"" W."
-    IDST_COMMENT            "Replacement for OpenGL Base (© Min) that renders directly to Fusion's surface."
+    IDST_COMMENT            "Replacement for OpenGL Base (© Min) that renders directly to the Fusion canvas. (v1.0)"
     IDST_HTTP               "https://community.clickteam.com/user/36199-nasirfoxx/"
 END
 
@@ -228,6 +237,10 @@ BEGIN
     IDSE_TRANSPCOLOR        "TransparentColor("
     IDSA_SETTRANSP          "Set transparent color to %0"
     IDSA_SETTRANSP1         "Transparent color"
+    IDSC_ISAUTOREDRAW       "%o: Auto redraw is enabled?"
+    IDSA_TRANSPE            "Enable transparency"
+    IDSA_TRANSPD            "Disable transparency"
+    IDSC_ISTRANSP           "%o: Is transparency enabled?"
 END
 
 #endif    // English (United States) resources

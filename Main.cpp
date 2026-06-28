@@ -31,6 +31,13 @@ short conditionsInfos[] =
 
 	IDMN_ONREDRAW, IDSC_ONREDRAW, CND_ONREDRAW, 0,
 	0,
+
+	IDMN_ISAUTOREDRAW, IDSC_ISAUTOREDRAW, CND_ISAUTOREDRAW, EVFLAGS_ALWAYS | EVFLAGS_NOTABLE,
+	0,
+
+
+	IDMN_ISTRANSP, IDSC_ISTRANSP, CND_ISTRANSP, EVFLAGS_ALWAYS | EVFLAGS_NOTABLE,
+	0,
 };
 
 // Definitions of parameters for each action
@@ -53,6 +60,11 @@ short actionsInfos[] =
 	IDMN_AUTOREDRAWD, IDSA_AUTOREDRAWD,	ACT_AUTOREDRAWD, 0,
 	0,
 	IDMN_REDRAW, IDSA_REDRAW, ACT_REDRAW, 0,
+	0,
+
+	IDMN_TRANSPE, IDSA_TRANSPE, ACT_TRANSPE, 0,
+	0,
+	IDMN_TRANSPD, IDSA_TRANSPD, ACT_TRANSPD, 0,
 	0,
 
 	IDMN_SETTRANSP, IDSA_SETTRANSP, ACT_SETTRANSP, 0,
@@ -83,15 +95,21 @@ short expressionsInfos[] =
 // 
 // ============================================================================
 
-// -----------------
-// Sample Condition
-// -----------------
-// Returns TRUE when the two values are equal!
-// 
-
 long WINAPI DLLExport Immediate(LPRDATA rdPtr, long param1, long param2)
 {
 	return TRUE;
+}
+
+
+long WINAPI DLLExport AutoRedrawEnabled(LPRDATA rdPtr, long param1, long param2)
+{
+	return rdPtr->autoRedraw;
+}
+
+
+long WINAPI DLLExport TransparencyEnabled(LPRDATA rdPtr, long param1, long param2)
+{
+	return rdPtr->rs.rsEffect & EFFECTFLAG_TRANSPARENT;
 }
 
 
@@ -100,12 +118,6 @@ long WINAPI DLLExport Immediate(LPRDATA rdPtr, long param1, long param2)
 // ACTIONS ROUTINES
 // 
 // ============================================================================
-
-// -----------------
-// Sample Action
-// -----------------
-// Does nothing!
-// 
 
 short WINAPI DLLExport SetSize(LPRDATA rdPtr, long param1, long param2)
 {
@@ -125,29 +137,28 @@ short WINAPI DLLExport SetSize(LPRDATA rdPtr, long param1, long param2)
 	}
 
 	if (rdPtr->surf && (differentWidth || differentHeight))
-	{
 		CreateGLSurface(rdPtr);
-	}
 
 	return 0;
 }
 
-short WINAPI DLLExport CreateGLWindow(LPRDATA rdPtr, long param1, long param2)
+short WINAPI DLLExport CreateSurface(LPRDATA rdPtr, long param1, long param2)
 {
-	if (CreateGLSurface(rdPtr))
-		callRunTimeFunction(rdPtr, RFUNCTION_GENERATEEVENT, CND_ONCREATES, NULL);
-	else
-		callRunTimeFunction(rdPtr, RFUNCTION_GENERATEEVENT, CND_ONCREATEF, NULL);
+	if (!rdPtr->surf->IsValid())
+	{
+		if (CreateGLSurface(rdPtr))
+			callRunTimeFunction(rdPtr, RFUNCTION_GENERATEEVENT, CND_ONCREATES, NULL);
+		else
+			callRunTimeFunction(rdPtr, RFUNCTION_GENERATEEVENT, CND_ONCREATEF, NULL);
+	}
 	return 0;
 }
 
 short WINAPI DLLExport MakeCurrent(LPRDATA rdPtr, long param1, long param2)
 {
 	if (rdPtr->hdc && rdPtr->glContext)
-	{
 		wglMakeCurrent(rdPtr->hdc, rdPtr->glContext);
-		return 0;
-	}
+
 	return 0;
 }
 
@@ -167,6 +178,19 @@ short WINAPI DLLExport AutoRedrawDisable(LPRDATA rdPtr, long param1, long param2
 short WINAPI DLLExport Redraw(LPRDATA rdPtr, long param1, long param2)
 {
 	UpdateSurface(rdPtr);
+	return 0;
+}
+
+
+short WINAPI DLLExport TransparencyEnable(LPRDATA rdPtr, long param1, long param2)
+{
+	rdPtr->rs.rsEffect |= EFFECTFLAG_TRANSPARENT;
+	return 0;
+}
+
+short WINAPI DLLExport TransparencyDisable(LPRDATA rdPtr, long param1, long param2)
+{
+	rdPtr->rs.rsEffect &= ~EFFECTFLAG_TRANSPARENT;
 	return 0;
 }
 
@@ -216,17 +240,21 @@ long (WINAPI * ConditionJumps[])(LPRDATA rdPtr, long param1, long param2) =
 	Immediate,
 	Immediate,
 	Immediate,
+	AutoRedrawEnabled,
+	TransparencyEnabled,
 	0
 };
 	
 short (WINAPI * ActionJumps[])(LPRDATA rdPtr, long param1, long param2) =
 {
 	SetSize,
-	CreateGLWindow,
+	CreateSurface,
 	MakeCurrent,
 	AutoRedrawEnable,
 	AutoRedrawDisable,
 	Redraw,
+	TransparencyEnable,
+	TransparencyDisable,
 	SetTransparentColor,
 	0
 };
