@@ -1,5 +1,5 @@
 # ![Ext icon](res/EXTICON.BMP "Icon") OpenGL-Surface
-Replacement extension for Min's OpenGL Base object. Available for CF2.5. Instead of creating a Win32 child window, this extension draws the OpenGL window using Fusion's native `cSurface` API, ensuring any other objects can be placed above the OpenGL scene. Transparency is also supported.
+Replacement extension for Min's OpenGL Base object. Available for CF2.5. Instead of creating a Win32 child window, this extension draws the OpenGL window using Fusion's native `cSurface` API, ensuring any other objects can be placed above the OpenGL scene. Rudimentary transparency is also supported.
 
 Usage of this extension is pretty much the same as the original OpenGL Base object.
 
