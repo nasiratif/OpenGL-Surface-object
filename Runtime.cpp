@@ -265,6 +265,8 @@ short WINAPI DLLExport DestroyRunObject(LPRDATA rdPtr, long fast)
 	if (rdPtr->glContext)
 		wglDeleteContext(rdPtr->glContext);
 
+	if (rdPtr->hdc)
+		ReleaseDC(rdPtr->hWnd, rdPtr->hdc);
 	if (rdPtr->hWnd)
 		DestroyWindow(rdPtr->hWnd);
 
