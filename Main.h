@@ -30,7 +30,9 @@
 
 #define	CND_ISTRANSP 4
 
-#define	CND_LAST 5
+#define	CND_ISWNDVISIBLE 5
+
+#define	CND_LAST 6
 
 // ---------------------------
 // DEFINITION OF ACTIONS CODES
@@ -48,7 +50,12 @@
 #define	ACT_TRANSPD 7
 #define	ACT_SETTRANSP 8
 
-#define	ACT_LAST 9
+#define	ACT_CREATESURFC 9
+
+#define	ACT_HIDEWND 10
+#define	ACT_SHOWWND 11
+
+#define	ACT_LAST 12
 
 // -------------------------------
 // DEFINITION OF EXPRESSIONS CODES
@@ -79,7 +86,7 @@ typedef struct tagEDATA_V1
 typedef EDITDATA *			LPEDATA;
 
 // Object versions
-#define	KCX_CURRENT_VERSION			1
+#define	KCX_CURRENT_VERSION			2
 
 // --------------------------------
 // RUNNING OBJECT DATA STRUCTURE
@@ -114,6 +121,9 @@ typedef struct tagRDATA
 	HDC hdc;
 
 	HGLRC glContext;
+	bool ownsContext;
+
+	bool hwa;
 
 	int bufferSize;
 	int alignedPitch;
@@ -138,7 +148,7 @@ typedef	RUNDATA	*			LPRDATA;
 
 // FUNCTIONS:
 // -----
-bool CreateGLSurface(LPRDATA rdPtr);
+bool CreateGLSurface(LPRDATA rdPtr, HGLRC newGLContext = NULL, HDC newDC = NULL);
 bool ResetWindow(LPRDATA rdPtr);
 void UpdateSurface(LPRDATA rdPtr);
 // Only necessary due to Standard display mode

@@ -38,6 +38,10 @@ short conditionsInfos[] =
 
 	IDMN_ISTRANSP, IDSC_ISTRANSP, CND_ISTRANSP, EVFLAGS_ALWAYS | EVFLAGS_NOTABLE,
 	0,
+
+
+	IDMN_ISWNDVISIBLE, IDSC_ISWNDVISIBLE, CND_ISWNDVISIBLE, EVFLAGS_ALWAYS | EVFLAGS_NOTABLE,
+	0,
 };
 
 // Definitions of parameters for each action
@@ -70,7 +74,16 @@ short actionsInfos[] =
 	IDMN_SETTRANSP, IDSA_SETTRANSP, ACT_SETTRANSP, 0,
 	1,
 		PARAM_COLOUR,
-		IDSA_SETTRANSP1
+		IDSA_SETTRANSP1,
+
+
+	IDMN_CREATESURFC, IDSA_CREATESURFC, ACT_CREATESURFC, 0,
+	0,
+
+	IDMN_HIDEWND, IDSA_HIDEWND, ACT_HIDEWND, 0,
+	0,
+	IDMN_SHOWWND, IDSA_SHOWWND, ACT_SHOWWND, 0,
+	0,
 };
 
 // Definitions of parameters for each expression
@@ -110,6 +123,12 @@ long WINAPI DLLExport AutoRedrawEnabled(LPRDATA rdPtr, long param1, long param2)
 long WINAPI DLLExport TransparencyEnabled(LPRDATA rdPtr, long param1, long param2)
 {
 	return rdPtr->rs.rsEffect & EFFECTFLAG_TRANSPARENT;
+}
+
+
+long WINAPI DLLExport WindowShown(LPRDATA rdPtr, long param1, long param2)
+{
+	return rdPtr->ownsContext ? FALSE : IsWindowVisible(rdPtr->hWnd);
 }
 
 
@@ -203,6 +222,37 @@ short WINAPI DLLExport SetTransparentColor(LPRDATA rdPtr, long param1, long para
 }
 
 
+short WINAPI DLLExport CreateSurfaceCurrent(LPRDATA rdPtr, long param1, long param2)
+{
+	if (!rdPtr->surf->IsValid())
+	{
+		auto currentCtx = wglGetCurrentContext();
+		auto currentDC = wglGetCurrentDC();
+		if (currentCtx && currentDC && CreateGLSurface(rdPtr, currentCtx, currentDC))
+			callRunTimeFunction(rdPtr, RFUNCTION_GENERATEEVENT, CND_ONCREATES, NULL);
+		else
+			callRunTimeFunction(rdPtr, RFUNCTION_GENERATEEVENT, CND_ONCREATEF, NULL);
+	}
+	return 0;
+}
+
+short WINAPI DLLExport HideGLWindow(LPRDATA rdPtr, long param1, long param2)
+{
+	if (!rdPtr->ownsContext && rdPtr->hWnd)
+		ShowWindow(rdPtr->hWnd, SW_HIDE);
+
+	return 0;
+}
+
+short WINAPI DLLExport ShowGLWindow(LPRDATA rdPtr, long param1, long param2)
+{
+	if (!rdPtr->ownsContext && rdPtr->hWnd)
+		ShowWindow(rdPtr->hWnd, SW_SHOW);
+
+	return 0;
+}
+
+
 // ============================================================================
 //
 // EXPRESSIONS ROUTINES
@@ -242,6 +292,7 @@ long (WINAPI * ConditionJumps[])(LPRDATA rdPtr, long param1, long param2) =
 	Immediate,
 	AutoRedrawEnabled,
 	TransparencyEnabled,
+	WindowShown,
 	0
 };
 	
@@ -256,6 +307,9 @@ short (WINAPI * ActionJumps[])(LPRDATA rdPtr, long param1, long param2) =
 	TransparencyEnable,
 	TransparencyDisable,
 	SetTransparentColor,
+	CreateSurfaceCurrent,
+	HideGLWindow,
+	ShowGLWindow,
 	0
 };
 

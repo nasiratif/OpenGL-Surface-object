@@ -28,8 +28,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 1 VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION 1,1,0,0
+ PRODUCTVERSION 1,1,0,0
  FILEFLAGSMASK 0x0L
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -45,11 +45,11 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "FileDescription", "OpenGL Surface object"
-            VALUE "FileVersion", "1.0.0.1"
+            VALUE "FileVersion", "1.1.0.0"
             VALUE "InternalName", "OpenGL-Surface"
             VALUE "LegalCopyright", "Copyright © 2026 Nasir ""Nassic"" W."
             VALUE "OriginalFilename", "OpenGL-Surface.mfx"
-            VALUE "ProductVersion", "1.0.0.1"
+            VALUE "ProductVersion", "1.1.0.0"
             VALUE "SpecialBuild", "00000001"
         END
     END
@@ -117,6 +117,8 @@ BEGIN
         MENUITEM "Is auto redraw enabled?",     IDMN_ISAUTOREDRAW
         MENUITEM SEPARATOR
         MENUITEM "Is transparency enabled?",    IDMN_ISTRANSP
+        MENUITEM SEPARATOR
+        MENUITEM "Is the associated window visible?", IDMN_ISWNDVISIBLE
     END
 END
 #endif
@@ -133,7 +135,11 @@ BEGIN
         MENUITEM "Set object size",             IDMN_SETSIZE
         MENUITEM SEPARATOR
         MENUITEM "Create surface",              IDMN_CREATESURF
+        MENUITEM "Create surface (with current OpenGL context)", IDMN_CREATESURFC
         MENUITEM "Make current",                IDMN_MAKECUR
+        MENUITEM SEPARATOR
+        MENUITEM "Hide associated window",      IDMN_HIDEWND
+        MENUITEM "Show associated window",      IDMN_SHOWWND
         MENUITEM SEPARATOR
         POPUP "Auto redraw"
         BEGIN
@@ -211,7 +217,7 @@ BEGIN
     IDSA_SETSIZE            "Set object size to (%0 x %1)"
     IDSA_SETSIZE1           "Width (0 to ignore)"
     IDSA_CREATESURF         "Create surface"
-    IDSA_MAKECUR            "Make current"
+    IDSA_MAKECUR            "Make context current"
     IDSA_SETSIZE2           "Height (0 to ignore)"
     IDSA_AUTOREDRAWE        "Enable auto redraw"
     IDSC_ONCREATES          "%o: On create surface success"
@@ -228,7 +234,7 @@ BEGIN
     IDST_OBJNAME            "OpenGL Surface"
     IDST_AUTHOR             "Nassic :)"
     IDST_COPYRIGHT          "Copyright © 2026 Nasir ""Nassic"" W."
-    IDST_COMMENT            "Replacement for OpenGL Base (© Min) that renders directly to the Fusion canvas. (v1.0.1)"
+    IDST_COMMENT            "Replacement for OpenGL Base (© Min) that renders directly to the Fusion canvas. (v1.1)"
     IDST_HTTP               "https://community.clickteam.com/user/36199-nasirfoxx/"
 END
 
@@ -241,6 +247,10 @@ BEGIN
     IDSA_TRANSPE            "Enable transparency"
     IDSA_TRANSPD            "Disable transparency"
     IDSC_ISTRANSP           "%o: Is transparency enabled?"
+    IDSA_CREATESURFC        "Create surface, using current OpenGL context"
+    IDSA_HIDEWND            "Hide associated window"
+    IDSA_SHOWWND            "Show associated window"
+    IDSC_ISWNDVISIBLE       "%o: Is the associated window visible?"
 END
 
 #endif    // English (United States) resources

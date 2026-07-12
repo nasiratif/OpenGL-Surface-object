@@ -15,12 +15,35 @@
 
 */
 
-bool CreateGLSurface(LPRDATA rdPtr)
+bool CreateGLSurface(LPRDATA rdPtr, HGLRC newGLContext, HDC newDC)
 {
 	cSurface* proto;
-	if (GetSurfacePrototype(&proto, 24, ST_MEMORY, SD_DIB))
+	if (GetSurfacePrototype(&proto, 32, ST_MEMORY, SD_DIB))
 	{
+		if (newGLContext && newDC)
+		{
+			if (rdPtr->glContext != newGLContext)
+			{
+				rdPtr->ownsContext = false;
+				rdPtr->glContext = newGLContext;
+				rdPtr->hdc = newDC;
+				rdPtr->hWnd = WindowFromDC(rdPtr->hdc);
+			}
+		}
+		else if (!rdPtr->glContext)
+		{
+			rdPtr->ownsContext = true;
+		}
+
 		rdPtr->surf->Create(rdPtr->rHo.hoImgWidth, rdPtr->rHo.hoImgHeight, proto);
+		// For transparency to work in Standard display mode we need to manage an alpha surface
+		if (!rdPtr->hwa)
+		{
+			rdPtr->surf->CreateAlpha();
+			auto alphaSurf = rdPtr->surf->GetAlphaSurface();
+			if (alphaSurf)
+				alphaSurf->Fill((COLORREF)0);
+		}
 		rdPtr->surf->SetTransparentColor(rdPtr->transpColor);
 		rdPtr->surf->Fill(rdPtr->transpColor);
 		rdPtr->alignedPitch = AlignValue(rdPtr->surf->GetWidth() * (rdPtr->surf->GetDepth() / CHAR_BIT));
@@ -38,7 +61,7 @@ bool CreateGLSurface(LPRDATA rdPtr)
 			pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
 			pfd.iPixelType = PFD_TYPE_RGBA;
 			pfd.iLayerType = PFD_MAIN_PLANE;
-			pfd.cColorBits = 24;
+			pfd.cColorBits = rdPtr->surf->GetDepth();
 			pfd.cDepthBits = 24;
 			pfd.cStencilBits = 8;
 
@@ -53,7 +76,8 @@ bool CreateGLSurface(LPRDATA rdPtr)
 				return false;
 		}
 
-		glViewport(0, 0, rdPtr->rHo.hoImgWidth, rdPtr->rHo.hoImgHeight);
+		if (rdPtr->ownsContext)
+			glViewport(0, 0, rdPtr->rHo.hoImgWidth, rdPtr->rHo.hoImgHeight);
 	}
 	else
 	{
@@ -65,6 +89,9 @@ bool CreateGLSurface(LPRDATA rdPtr)
 
 bool ResetWindow(LPRDATA rdPtr)
 {
+	if (!rdPtr->ownsContext)
+		return true;
+
 	if (rdPtr->hWnd)
 	{
 		SetWindowPos(rdPtr->hWnd, NULL, 0, 0, rdPtr->rHo.hoImgWidth, rdPtr->rHo.hoImgHeight, SWP_NOREPOSITION);
@@ -130,7 +157,7 @@ void UpdateSurface(LPRDATA rdPtr)
 		}
 
 		glFlush();
-		glReadPixels(0, 0, width, height, GL_BGR_EXT, GL_UNSIGNED_BYTE, rdPtr->srcBits);
+		glReadPixels(0, 0, width, height, GL_BGRA_EXT, GL_UNSIGNED_BYTE, rdPtr->srcBits);
 
 		auto dest = bits;
 		auto destEnd = bits + pitch * height;
@@ -143,6 +170,44 @@ void UpdateSurface(LPRDATA rdPtr)
 			src -= rdPtr->alignedPitch;
 			memcpy(dest, src, destRowSize);
 			dest += pitch;
+		}
+
+		if (!rdPtr->hwa && (rdPtr->rs.rsEffect & EFFECTFLAG_TRANSPARENT))
+		{
+			auto alphaSurf = rdPtr->surf->GetAlphaSurface();
+			if (alphaSurf)
+			{
+				// Reverse channels:
+				auto transpColor = ((rdPtr->transpColor & 0xFF) << 16) | (rdPtr->transpColor & 0xFF00) | ((rdPtr->transpColor & 0xFF0000) >> 16);
+
+				auto depthBytes = depth / CHAR_BIT;
+				auto alphaBits = rdPtr->surf->LockAlpha();
+				auto alphaPitch = rdPtr->surf->GetAlphaPitch();
+				auto alphaDepth = alphaSurf->GetDepth();
+				auto alphaDepthBytes = alphaDepth / CHAR_BIT;
+				if (alphaBits)
+				{
+					auto dest = alphaBits;
+					auto src = bits;
+
+					for (int r = 0; r < height; ++r)
+					{
+						auto destX = dest;
+						auto srcX = src;
+						for (int p = 0; p < width; ++p)
+						{
+							auto color = *((uint32_t*)srcX) & 0xFFFFFF;
+							auto opaque = color != transpColor ? 0xFF : 0x0;
+							memset(destX, opaque, alphaDepthBytes);
+							destX += alphaDepthBytes;
+							srcX += depthBytes;
+						}
+						dest += alphaPitch;
+						src += pitch;
+					}
+					rdPtr->surf->UnlockAlpha();
+				}
+			}
 		}
 
 		rdPtr->surf->UnlockBuffer(bits);
@@ -245,6 +310,10 @@ short WINAPI DLLExport CreateRunObject(LPRDATA rdPtr, LPEDATA edPtr, fpcob cobPt
 	rdPtr->hdc = NULL;
 
 	rdPtr->glContext = NULL;
+	rdPtr->ownsContext = true;
+
+	auto surf = WinGetSurface((int)rdPtr->rHo.hoAdRunHeader->rhIdEditWin);
+	rdPtr->hwa = surf ? surf->GetDriver() >= SD_D3D9 : false;
 
 	rdPtr->bufferSize = 0;
 	rdPtr->alignedPitch = 0;
@@ -262,11 +331,13 @@ short WINAPI DLLExport CreateRunObject(LPRDATA rdPtr, LPEDATA edPtr, fpcob cobPt
 // 
 short WINAPI DLLExport DestroyRunObject(LPRDATA rdPtr, long fast)
 {
-	if (rdPtr->glContext)
-		wglDeleteContext(rdPtr->glContext);
-
-	if (rdPtr->hdc)
-		ReleaseDC(rdPtr->hWnd, rdPtr->hdc);
+	if (rdPtr->ownsContext)
+	{
+		if (rdPtr->glContext)
+			wglDeleteContext(rdPtr->glContext);
+		if (rdPtr->hdc)
+			ReleaseDC(rdPtr->hWnd, rdPtr->hdc);
+	}
 	if (rdPtr->hWnd)
 		DestroyWindow(rdPtr->hWnd);
 
